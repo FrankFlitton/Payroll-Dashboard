@@ -1,0 +1,12 @@
+FROM node:10.10
+RUN apt-get update
+RUN apt-get install -y vim
+
+ADD ./frontend/package.json /tmp/package.json
+RUN cd /tmp && npm install && npm rebuild node-sass
+RUN mkdir -p /app && cp -a /tmp/node_modules /app/
+
+WORKDIR /app
+ADD ./frontend /app
+
+CMD []

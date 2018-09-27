@@ -7,10 +7,6 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/backend/Dockerfile
-    stdin_open: true
-    tty: true
-    env_file:
-      - ./dockerfiles/backend/env
     volumes:
       - ./backend:/backend
     stdin_open: true

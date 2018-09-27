@@ -1,0 +1,12 @@
+ FROM python:3.6
+ RUN apt-get update && apt-get install -y \
+	postgresql \
+	postgresql-contrib \
+	postgresql-client \
+
+ RUN mkdir /app
+ WORKDIR /app
+ ADD ./api/requirements /app/requirements
+ RUN pip install -r requirements/dev.txt
+ ADD ./api /app
+#  RUN chmod +x /app/wait-for-postgres.sh TODO: prevents possible race condition on boot
