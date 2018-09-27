@@ -17,7 +17,9 @@ services:
       - "8000:8000"
     depends_on:
       - db
-    command: python manage.py runserver
+    environment:
+      - HOST=0.0.0.0
+    command: python manage.py runserver 0.0.0.0:8000
 
   frontend:
     build:
