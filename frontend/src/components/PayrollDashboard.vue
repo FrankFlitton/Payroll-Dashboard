@@ -6,8 +6,10 @@
       </b-col>
       <b-col>
         <b-form>
-          <input type="file" @change="processFile($event)" />
-          <b-btn>
+          <input type="file" @change="updateFile($event)" />
+          <b-btn
+            @click="handleSubmit()"
+          >
             send!
           </b-btn>
         </b-form>
@@ -25,15 +27,20 @@ export default {
   mounted () {
   },
   created () {
+    this.postFile()
   },
   methods: {
     handleSubmit () {
       this.postFile()
     },
+    updateFile (event) {
+      this.form.formData.append('file', event.target.files[0])
+      console.log(this.form.formData)
+    },
     postFile () {
       let vm = this
-      let config = this.config
-      HTTP.post('/', config)
+
+      HTTP.post('/uploads/', vm.form.formData, vm.form.headers)
         .then(function (response) {
           console.log(response)
           vm.res = response
@@ -46,7 +53,14 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      res: ''
+      res: '',
+      form: {
+        formData: new FormData(),
+        label: 'test',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
     }
   }
 }

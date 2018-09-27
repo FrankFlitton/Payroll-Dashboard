@@ -56,8 +56,6 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'payroll.report',
-    'payroll.fileupload',
-
 ]
 
 MIDDLEWARE = [

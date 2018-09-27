@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Employee, JobGroup, TimeReport, TimeSheet
+from .models import Employee, JobGroup, TimeReport, TimeSheet, PayrollFile
 
 
 # Register your models here.
@@ -27,7 +27,14 @@ class TimeSheetAdmin(admin.ModelAdmin):
     ordering = ('pay_date', )
     search_field = ('id', 'pay_date', 'hours_worked', 'job_group', 'employee', 'report', )
 
+class PayrollFileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'file', 'timestamp', )
+    list_filter = ('id', 'file', 'timestamp', )
+    ordering = ('id', )
+    search_field = ('id', 'file', 'timestamp', )
+
 admin.site.register(JobGroup, JobGroupAdmin)
 admin.site.register(TimeReport, TimeReportAdmin)
 admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(TimeSheet, TimeSheetAdmin)
+admin.site.register(PayrollFile, PayrollFileAdmin)

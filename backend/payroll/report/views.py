@@ -1,9 +1,11 @@
 from django.contrib.auth.models import User, Group
 from payroll.report.models import TimeReport
-from rest_framework import viewsets, views
-from rest_framework.parsers import MultiPartParser, FileUploadParser
+from rest_framework import viewsets, status
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
-from payroll.report.serializers import UserSerializer, GroupSerializer
+from payroll.report.serializers import UserSerializer, GroupSerializer, PayrollFileSerializer
+
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -21,17 +23,17 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
-class ReporViewSet(views.APIView):
-    parser_classes = (FileUploadParser,)
-    queryset = TimeReport.objects.all()
+class FileView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
 
-    def put(self, request, filename, format=None):
-        file_obj = request.data['file']
-        print(file_obj)
-        # ...
-        # do some stuff with uploaded file
-        # ...
-        return Response(status=204)
+    def post(self, request, *args, **kwargs):
+        file_serializer = PayrollFileSerializer(data=request.data)
+        print(request)
+        if file_serializer.is_valid():
+            file_serializer.save()
+            return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # class ReporViewSet(viewsets.ModelViewSet):
 #     parser_classes = (MultiPartParser,)

@@ -20,3 +20,8 @@ class TimeSheet(models.Model):
     job_group = models.ForeignKey(JobGroup, on_delete=models.PROTECT, null=True)
     employee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True)
     report = models.ForeignKey(TimeReport, on_delete=models.PROTECT, null=True)
+
+class PayrollFile(models.Model):
+    id = models.AutoField(primary_key=True)
+    file = models.FileField(blank=False, null=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
