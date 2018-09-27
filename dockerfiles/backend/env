@@ -1,0 +1,8 @@
+#DB CONFIG
+DBENGINE=django.db.backends.postgresql
+DBNAME=postgres
+DBUSER=postgres
+DBHOST=db
+DBPORT=5432
+
+ALLOWED_HOSTS=0.0.0.0,localhost,https://localhost:8080

@@ -10,11 +10,14 @@ services:
       dockerfile: ./dockerfiles/backend/dockerfile
     volumes:
       - ./backend:/app
+    tty: true
+    stdin_open: true
+    env_file: ./dockerfiles/backend/env
     ports:
       - "8000:8000"
     depends_on:
       - db
-    command: python --version
+    command: python manage.py runserver
 
   frontend:
     build:
