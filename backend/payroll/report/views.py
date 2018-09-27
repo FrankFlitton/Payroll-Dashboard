@@ -6,7 +6,10 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from payroll.report.serializers import UserSerializer, GroupSerializer, PayrollFileSerializer
 
+import pdb
+import io
 
+import csv
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -28,9 +31,18 @@ class FileView(APIView):
 
     def post(self, request, *args, **kwargs):
         file_serializer = PayrollFileSerializer(data=request.data)
-        print(request)
         if file_serializer.is_valid():
-            file_serializer.save()
+            print("file_serializer_____")
+            print(file_serializer)
+
+            csv_file = request.FILES['file']
+
+            csv_file.seek(0)
+            reader = csv.DictReader(io.StringIO(csv_file.read().decode('utf-8')))
+
+            for row in reader:
+                print(row)
+
             return Response(file_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

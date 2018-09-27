@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container class="mt-5">
     <b-row>
       <b-col>
       dashboard layout here. <br>{{msg}} <br> {{res}}
@@ -39,7 +39,6 @@ export default {
     },
     postFile () {
       let vm = this
-
       HTTP.post('/uploads/', vm.form.formData, vm.form.headers)
         .then(function (response) {
           console.log(response)
@@ -56,7 +55,6 @@ export default {
       res: '',
       form: {
         formData: new FormData(),
-        label: 'test',
         headers: {
           'Content-Type': 'multipart/form-data'
         }
