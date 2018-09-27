@@ -2,11 +2,11 @@
  RUN apt-get update && apt-get install -y \
 	postgresql \
 	postgresql-contrib \
-	postgresql-client \
+	postgresql-client
 
  RUN mkdir /app
  WORKDIR /app
- ADD ./api/requirements /app/requirements
- RUN pip install -r requirements/dev.txt
- ADD ./api /app
+ ADD ./backend/requirements.txt /app/requirements.txt
+ RUN pip install -r requirements.txt
+ ADD ./backend /app
 #  RUN chmod +x /app/wait-for-postgres.sh TODO: prevents possible race condition on boot

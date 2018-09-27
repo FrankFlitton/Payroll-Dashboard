@@ -1,33 +1,29 @@
+version: '3'
+
 services:
   db:
     image: postgres
-    volumes:
-      - ./db:/var/lib/postgresql/data
+
   backend:
     build:
       context: .
-      dockerfile: dockerfiles/backend/Dockerfile
+      dockerfile: ./dockerfiles/backend/dockerfile
     volumes:
-      - ./backend:/backend
-    stdin_open: true
-    tty: true
+      - ./backend:/app
     ports:
       - "8000:8000"
     depends_on:
       - db
-    command: python manage.py runserver
+    command: python --version
 
-  web:
+  frontend:
     build:
       context: .
-      dockerfile: dockerfiles/web/Dockerfile
+      dockerfile: ./dockerfiles/frontend/dockerfile
     working_dir: /app
     volumes:
       - ./frontend:/app
       - /app/node_modules
     ports:
       - "8080:8080"
-    environment:
-      - NODE_ENV=development
-      - DEPLOY='development'
     command: npm run dev
