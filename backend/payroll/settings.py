@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'payroll.report',
+    'payroll.fileupload',
 
 ]
 
@@ -146,6 +147,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Storeing uploaded files
+# Storing uploaded files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
