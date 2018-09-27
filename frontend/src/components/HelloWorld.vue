@@ -79,7 +79,7 @@
           awesome-vue
         </a>
       </li>
-    </ul>
+    </ul>>
   </div>
 </template>
 

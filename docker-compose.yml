@@ -24,9 +24,13 @@ services:
       context: .
       dockerfile: ./dockerfiles/frontend/dockerfile
     working_dir: /app
+    tty: true
+    stdin_open: true
     volumes:
       - ./frontend:/app
       - /app/node_modules
     ports:
       - "8080:8080"
+    environment:
+      - HOST=0.0.0.0
     command: npm run dev

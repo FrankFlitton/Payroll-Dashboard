@@ -1,7 +1,18 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+    <a-layout>
+      <a-layout-sider>Sider</a-layout-sider>
+
+        <a-layout>
+          <a-layout-header>Header</a-layout-header>
+
+          <a-layout-content>
+            <router-view></router-view>
+          </a-layout-content>
+
+          <a-layout-footer>Footer</a-layout-footer>
+        </a-layout>
+    </a-layout>
   </div>
 </template>
 
@@ -17,7 +28,5 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

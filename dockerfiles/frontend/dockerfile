@@ -1,4 +1,4 @@
-FROM node:10.10
+FROM node:9.6
 RUN apt-get update
 RUN apt-get install -y vim
 
