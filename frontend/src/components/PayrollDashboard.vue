@@ -5,7 +5,7 @@
 
         <!-- data form -->
         <b-form
-          v-if="!showTable"
+          v-if="!showTable && !isInit"
           class="file-input-form"
         >
           <h2 class="pb-3">
@@ -34,31 +34,17 @@
           v-else-if="showTable && isCompiled"
           class="p-relative w-100 h-100"
         >
-          <div class="report-wrapper">
-            <h2 class="pb-3">
-              Payroll Report
-            </h2>
-            <!-- data table -->
-            <vue-good-table
-              :columns="columns"
-              :rows="timeSheets"
-              :sort-options="{
-                enabled: true
-              }"
-              :search-options="{
-                enabled: true,
-                placeholder: 'Search by employee number',
-                searchFn: searchEmployees,
-              }"
-            />
-
-          </div>
+          <reportTable
+            :rows="timeSheets"
+          ></reportTable>
         </div>
 
+        <!-- Loading Icon -->
         <div
           v-else
-          class="loading"
-      ></div>
+        >
+          <div class="loading"></div>
+        </div>
 
       </transition>
 
@@ -69,15 +55,18 @@
 <script>
 import HTTP from '@/http'
 import _ from 'lodash'
-import {VueGoodTable} from 'vue-good-table'
+import reportTable from '@/components/ReportTable'
 
 export default {
   name: 'PayrollDashboard',
   components: {
-    VueGoodTable
+    reportTable
   },
   mounted () {
     this.getTimeSheets()
+  },
+  created () {
+    this.isInit = true
   },
   computed: {
     showTable () {
@@ -152,7 +141,9 @@ export default {
         }
       })
 
-      this.isCompiled = true
+      setTimeout(() => {
+        this.isCompiled = true
+      }, 3000)
 
       return compiledSheet
     },
@@ -165,24 +156,7 @@ export default {
       timeSheets: [],
       submitError: false,
       isCompiled: false,
-      columns: [
-        {
-          label: 'Employee ID',
-          field: 'employee'
-        },
-        {
-          label: 'Pay Period',
-          field: 'pay_period'
-        },
-        {
-          label: 'Pay Amount',
-          field: 'pay_amount',
-          sortable: true,
-          sortFn: (x, y) => {
-            return (x < y ? -1 : (x > y ? 1 : 0))
-          }
-        }
-      ],
+      isInit: true,
       form: {
         formData: new FormData(),
         headers: {
@@ -195,14 +169,9 @@ export default {
 </script>
 
 <style lang="scss">
-// Variables
-$c-grey: rgba(230, 234, 236, 0.5);
-$c-primary: rgb(34, 14, 218);
-$c-error-bg: rgba(221, 169, 169, 0.5);
-$c-error-text: rgb(241, 14, 14);
-$b-radius: 5px;
-$margin: 15px;
+@import 'static/variables.scss';
 
+// Container
 .ui-container {
   background: solid 1px $c-grey;
   box-shadow: 0px 5px 13px 5px $c-grey;
@@ -211,42 +180,42 @@ $margin: 15px;
   width: 100%;
   position: relative;
   min-height: 400px;
+}
 
-  // file upload styles
-  .file-input-form {
-    width: 80%;
-    overflow: hidden;
-    padding: $margin;
-    position: absolute !important;
-    display: block;
-    top: 30px;
-    left: 10%;
-    z-index: 0;
-    .file-container {
-      width: 100%;
-      background: $c-grey;
-      border-radius: $b-radius;
-    }
-    [type=file] {
-      cursor: pointer;
-      display: flex;
-      font-size: 999px;
-      filter: alpha(opacity=0);
-      min-height: 100%;
-      min-width: 100%;
-      opacity: 0;
-      position: absolute;
-      right: 0;
-      text-align: right;
-      top: 0;
-    }
-    .btn {
-      margin-top: 30px;
-      width: 120px;
-      background: $c-primary;
-      position: relative;
-      z-index: 999;
-    }
+// file upload styles
+.file-input-form {
+  width: 80%;
+  overflow: hidden;
+  padding: $margin;
+  position: absolute !important;
+  display: block;
+  top: 30px;
+  left: 10%;
+  z-index: 0;
+  .file-container {
+    width: 100%;
+    background: $c-grey;
+    border-radius: $b-radius;
+  }
+  [type=file] {
+    cursor: pointer;
+    display: flex;
+    font-size: 999px;
+    filter: alpha(opacity=0);
+    min-height: 100%;
+    min-width: 100%;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 0;
+  }
+  .btn {
+    margin-top: 30px;
+    width: 120px;
+    background: $c-primary;
+    position: relative;
+    z-index: 999;
   }
 }
 
@@ -256,34 +225,6 @@ $margin: 15px;
   position: relative !important;
   width: 100%;
   z-index: 1;
-}
-// table style
-.vgt-wrap {
-  border-radius: $b-radius;
-  overflow: hidden;
-  .vgt-global-search, {
-    background: $c-grey !important;
-    padding: $margin 0;
-  }
-  .sorting {
-    background: $c-grey !important;
-    padding: $margin $margin;
-  }
-  .vgt-table th.sorting:after {
-    border-bottom-color: $c-primary;
-  }
-  .vgt-table th.sorting:after {
-    border-top-color: $c-primary;
-  }
-  tbody td {
-    padding: $margin $margin;
-  }
-  tbody tr:nth-child(even) {
-    background: rgba($c-primary, 0.03);
-  }
-  *:not(.magnifying-glass) {
-    border: none !important;
-  }
 }
 
 // error style
@@ -295,25 +236,24 @@ $margin: 15px;
 // preloading animation
 .loading, .loading:before, .loading:after {
   content: " ";
-  background: rgba($c-primary, 0.21);
+  background: rgba($c-primary, 0.34);
   width: 13vw;
   height: 13vw;
   margin: 0 auto;
-  top: 10vw;
-  left: 40vw;
+  top: 15vw;
+  left: 34vw;
   border-radius: 50%;
   position: absolute;
-  opacity: 1;
-  transform: scale(1)
+  transform: scale(1);
 }
 .loading:before, .loading:after {
-  animation: pulse 1s infinite ease;
+  animation: pulse 1s infinite ease-out;
   left: 0px;
   top: 0px;
-  background: $c-primary;
+  background: rgba($c-primary, 1);
 }
 .loading:after {
-  animation: pulse 1s 0.8s infinite ease;
+  animation: pulse 1s -0.6s infinite ease-out;
 }
 @keyframes pulse {
     0% {
@@ -331,6 +271,6 @@ $margin: 15px;
   transition: opacity .5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
+  opacity: 0 !important;
 }
 </style>
