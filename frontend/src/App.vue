@@ -1,9 +1,8 @@
 <template>
   <div id="app" class="d-flex flex-column">
-    <b-navbar toggleable="md" type="dark" variant="primary">
+    <b-navbar toggleable="md" type="dark" variant="primary" class="pt-4 pb-4">
       <b-container>
-        <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-        <b-navbar-brand href="#">PAYROLLTRON</b-navbar-brand>
+        <b-navbar-brand href="#">Payroll App</b-navbar-brand>
       </b-container>
     </b-navbar>
 
@@ -29,12 +28,16 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  background: rgb(241, 239, 239);
 }
 body, #app {
    min-height:100vh;
 }
 .flex-fill {
    flex:1 1 auto;
+}
+.bg-primary {
+  background: rgb(34, 14, 218) !important;
 }
 footer {
   background: rgb(215, 217, 224)

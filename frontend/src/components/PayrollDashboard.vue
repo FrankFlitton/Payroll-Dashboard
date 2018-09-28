@@ -1,11 +1,14 @@
 <template>
   <b-row class="mt-5 mb-5 h-100 d-flex">
-    <b-col class="ui-container p-2 p-sm-5">
+    <b-col class="ui-container p-2 p-sm-5 p-relative">
       <transition name="fade">
         <div
           v-if="showTable && isCompiled"
+          class="report-wrapper p-absolute"
         >
-
+          <h2 class="pb-3">
+            Payroll Report
+          </h2>
           <!-- data table -->
           <vue-good-table
             :columns="columns"
@@ -19,7 +22,8 @@
             }"
             :search-options="{
               enabled: true,
-              placeholder: 'Search this table',
+              placeholder: 'Search by employee number',
+              searchFn: searchEmployees,
             }"
           />
 
@@ -29,6 +33,10 @@
           v-if="!showTable"
           class="file-input-form"
         >
+          <h2 class="pb-3">
+            Upload Payroll File
+          </h2>
+
           <label
             class="file-container p-3 p-sm-5"
             :class="{'error': submitError}"
@@ -140,6 +148,9 @@ export default {
       this.isCompiled = true
 
       return compiledSheet
+    },
+    searchEmployees (row, col, cellValue, searchTerm) {
+      return row.employee === searchTerm
     }
   },
   data () {
@@ -187,16 +198,18 @@ $margin: 15px;
 
 .ui-container {
   background: solid 1px $c-grey;
-  box-shadow: 0px 5px 13px 0px $c-grey;
+  box-shadow: 0px 5px 13px 5px $c-grey;
   border-radius: $b-radius;
   background: white;
 
   // file upload styles
   .file-input-form {
     width: 100%;
-    position: relative;
     overflow: hidden;
     padding: $margin;
+    position: relative !important;
+    width: 100%;
+    top: 0;
     .file-container {
       width: 100%;
       background: $c-grey;
@@ -224,8 +237,46 @@ $margin: 15px;
     }
   }
 }
+.report-wrapper {
+  top: 0;
+  position: relative !important;
+  width: 100%;
+}
+// table style
+.vgt-wrap {
+  .vgt-global-search, {
+    background: $c-grey !important;
+    padding: $margin 0;
+  }
+  .sorting {
+    background: $c-grey !important;
+    padding: $margin $margin;
+  }
+  .vgt-table th.sorting:after {
+    border-bottom-color: $c-primary;
+  }
+  .vgt-table th.sorting:after {
+    border-top-color: $c-primary;
+  }
+  tbody td {
+    padding: $margin $margin;
+  }
+  *:not(.magnifying-glass) {
+    border: none !important;
+  }
+}
+
+// error style
 .error {
   background: $c-error-bg !important;
   color: $c-error-text !important;
+}
+
+// transition animation
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .68s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
