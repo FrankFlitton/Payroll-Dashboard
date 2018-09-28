@@ -1,12 +1,9 @@
 <template>
-  <b-container class="mt-5">
+  <b-container class="mt-5 mb-5">
     <b-row>
       <b-col>
-      dashboard layout here. <br>{{msg}} <br> {{res}}
-      </b-col>
-      <b-col>
       <transition name="fade">
-        <div v-if="showTable">TABLE
+        <div v-if="showTable">
           <vue-good-table
             :columns="columns"
             :rows="timeSheets"
@@ -41,7 +38,6 @@
 <script>
 import HTTP from '@/http'
 import _ from 'lodash'
-import moment from 'moment'
 import {VueGoodTable} from 'vue-good-table'
 
 export default {
@@ -63,7 +59,6 @@ export default {
     },
     updateFile (event) {
       this.form.formData.append('file', event.target.files[0])
-      console.log(this.form.formData)
     },
     postFile () {
       let vm = this
@@ -88,21 +83,44 @@ export default {
     },
     // Format the object for table viz
     setupTimeSheets (timeSheets) {
-      let consolodatedTimeSheets = this.consolodateTimeSheets(timeSheets)
-
-      console.log(consolodatedTimeSheets)
-
-      return timeSheets.map(sheet => {
+      // Set up the data to process
+      timeSheets.map(sheet => {
         sheet.employee = sheet.employee.id
-        sheet.compensation = sheet.job_group.compensation.toString()
+        sheet.compensation = sheet.job_group.compensation
         sheet.pay_amount = sheet.job_group.compensation * sheet.hours_worked
-        sheet.pay_date = moment(sheet.pay_date).format('LL')
-        sheet.report = sheet.report.id
         return sheet
       })
+      let consolodatedTimeSheets = this.consolodateTimeSheets(timeSheets)
+
+      return consolodatedTimeSheets
     },
     consolodateTimeSheets (timeSheets) {
-      return timeSheets
+      let compiledSheet = []
+      // Seperate by payPeriod
+      let payPeriods = _.groupBy(timeSheets, 'pay_period')
+      payPeriods = _.forEach(payPeriods, (value, key) => {
+        let activePeriod = key
+
+        // Seperate by Employee Id
+        payPeriods[key] = _.groupBy(payPeriods[key], 'employee')
+
+        // Pack timesheet per employee per paydate
+        for (let i in payPeriods[key]) {
+          let tempObj = {}
+          tempObj.pay_amount = 0
+          tempObj.pay_period = activePeriod
+          tempObj.employee = i
+
+          // Sum total pay
+          _.forEach(payPeriods[key][i], value => {
+            tempObj.pay_amount += value.pay_amount
+          })
+
+          compiledSheet.push(tempObj)
+        }
+      })
+
+      return compiledSheet
     }
   },
   data () {
