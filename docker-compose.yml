@@ -21,7 +21,7 @@ services:
       - HOST=0.0.0.0
     command: >
       bash -c "python manage.py migrate
-      && python manage.py runserver 0.0.0.0:8000
+      && python /app/manage.py loaddata init
       && python manage.py runserver 0.0.0.0:8000"
 
   frontend:
