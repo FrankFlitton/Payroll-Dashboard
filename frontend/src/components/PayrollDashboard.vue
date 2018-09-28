@@ -28,26 +28,32 @@
         </b-form>
     </b-col>
 
-    <b-col class="ui-container w-100 p-2 p-sm-5 p-relative" cols="12">
+    <transition name="fade">
+      <b-col
+        v-if="showTable"
+        class="ui-container w-100 p-2 p-sm-5 p-relative"
+        cols="12"
+      >
 
-      <!-- Loading Icon -->
-      <transition name="fade">
-        <div
-          v-if="!isCompiled || (!showTable && !isInit)"
-        >
-          <div class="loading"></div>
-        </div>
-        <div
-          v-if="showTable && isCompiled && isInit"
-        >
-          <reportTable
-            v-if="showTable && isCompiled"
-            :rows="timeSheets"
-          ></reportTable>
-        </div>
-      </transition>
+        <!-- Loading Icon -->
+        <transition name="fade">
+          <div
+            v-if="!isCompiled || (!showTable)"
+          >
+            <div class="loading"></div>
+          </div>
+          <div
+            v-if="showTable && isCompiled && isInit"
+          >
+            <reportTable
+              v-if="showTable && isCompiled"
+              :rows="timeSheets"
+            ></reportTable>
+          </div>
+        </transition>
 
-    </b-col>
+      </b-col>
+    </transition>
   </b-row>
 </template>
 
@@ -244,7 +250,8 @@ export default {
   height: 13vw;
   margin: 0 auto;
   top: 15vw;
-  left: 34vw;
+  left: 50%;
+  margin-left: -7.5vw;
   border-radius: 50%;
   position: absolute;
   transform: scale(1);
@@ -253,6 +260,7 @@ export default {
   animation: pulse 1s infinite ease-out;
   left: 0px;
   top: 0px;
+  margin-left: 0;
   background: rgba($c-primary, 1);
 }
 .loading:after {
