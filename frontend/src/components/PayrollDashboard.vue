@@ -43,11 +43,7 @@
               :columns="columns"
               :rows="timeSheets"
               :sort-options="{
-                enabled: true,
-                initialSortBy: {
-                  field: 'pay_period',
-                  type: 'asc'
-                }
+                enabled: true
               }"
               :search-options="{
                 enabled: true,
@@ -133,22 +129,22 @@ export default {
     consolidateTimeSheets (timeSheets) {
       let compiledSheet = []
       // Seperate by payPeriod
-      let payPeriods = _.groupBy(timeSheets, 'pay_period')
-      payPeriods = _.forEach(payPeriods, (value, key) => {
-        let activePeriod = key
+      let employeeId = _.groupBy(timeSheets, 'employee')
+      employeeId = _.forEach(employeeId, (value, key) => {
+        let employeeIdNum = key
 
         // Seperate by Employee Id
-        payPeriods[key] = _.groupBy(payPeriods[key], 'employee')
+        employeeId[key] = _.groupBy(employeeId[key], 'pay_period')
 
         // Pack timesheet per employee per paydate
-        for (let i in payPeriods[key]) {
+        for (let payPeriod in employeeId[key]) {
           let tempObj = {}
           tempObj.pay_amount = 0
-          tempObj.pay_period = activePeriod
-          tempObj.employee = i
+          tempObj.pay_period = payPeriod
+          tempObj.employee = employeeIdNum
 
           // Sum total pay
-          _.forEach(payPeriods[key][i], value => {
+          _.forEach(employeeId[key][payPeriod], value => {
             tempObj.pay_amount += value.pay_amount
           })
 
