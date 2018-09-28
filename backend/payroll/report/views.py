@@ -58,7 +58,7 @@ class FileView(APIView):
 
                 # Ignore last row
                 row_counter = row_counter + 1
-                if row_counter < reader_len:
+                if row_counter < reader_len + 1:
 
                     # Set up variables
                     employee_id = row.get('employee id')
