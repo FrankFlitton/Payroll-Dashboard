@@ -16,6 +16,7 @@ class TimeReport(models.Model):
 class TimeSheet(models.Model):
     id = models.BigAutoField(primary_key=True)
     pay_date = models.DateTimeField(blank=False)
+    pay_period = models.CharField(max_length=64, blank=True, null=True)
     hours_worked = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     job_group = models.ForeignKey(JobGroup, on_delete=models.PROTECT, null=True)
     employee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True)
