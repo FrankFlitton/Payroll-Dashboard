@@ -36,6 +36,12 @@ export default {
   methods: {
     searchEmployees (row, col, cellValue, searchTerm) {
       return row.employee === searchTerm
+    },
+    sortNumber (x, y) {
+      return (x < y ? -1 : (x > y ? 1 : 0))
+    },
+    formatDollar (value) {
+      return '$'+ value.toFixed(2)
     }
   },
   data () {
@@ -47,15 +53,18 @@ export default {
         },
         {
           label: 'Pay Period',
-          field: 'pay_period'
+          field: 'pay_period',
+          thClass: 'text-center',
+          tdClass: 'text-center'
         },
         {
           label: 'Pay Amount',
           field: 'pay_amount',
           sortable: true,
-          sortFn: (x, y) => {
-            return (x < y ? -1 : (x > y ? 1 : 0))
-          }
+          sortFn: this.sortNumber,
+          formatFn: this.formatDollar,
+          thClass: 'right-header',
+          tdClass: 'text-right'
         }
       ]
     }
@@ -92,6 +101,28 @@ export default {
   }
   *:not(.magnifying-glass) {
     border: none !important;
+    transition: all 0.25s ease !important;
+  }
+  // Right aligned header style that works with header
+  .right-header {
+    text-align: right;
+    position: relative;
+    span {
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      right: $margin;
+      top: calc(50% - 0.75em);
+    }
+    &:hover span {
+      right: $margin*2;
+    }
+    &.sorting-desc, &.sorting-asc {
+      span {
+        right: $margin*2;
+      }
+    }
   }
 }
 
