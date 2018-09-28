@@ -44,10 +44,11 @@ class FileView(APIView):
                 return Response(file_serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
             # Create Time Report
-            time_report = rows[reader_len].get('hours worked') # 2nd col
+            time_report = rows[reader_len].get('hours worked') # 2nd col holds the data
             if len(time_report) > 0:
                 try:
                     time_report_obj = TimeReport.objects.get(id=time_report)
+                    return Response(file_serializer.data, status=status.HTTP_400_BAD_REQUEST)
                 except TimeReport.DoesNotExist:
                     time_report_obj = TimeReport(id=time_report)
                     time_report_obj.save()
