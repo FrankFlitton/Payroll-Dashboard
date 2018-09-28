@@ -1,34 +1,9 @@
 <template>
   <b-row class="mt-5 mb-5 h-100 d-flex">
-    <b-col class="ui-container p-2 p-sm-5 p-relative">
+    <b-col class="ui-container p-2 p-sm-5 p-absolute">
       <transition name="fade">
-        <div
-          v-if="showTable && isCompiled"
-          class="report-wrapper p-absolute"
-        >
-          <h2 class="pb-3">
-            Payroll Report
-          </h2>
-          <!-- data table -->
-          <vue-good-table
-            :columns="columns"
-            :rows="timeSheets"
-            :sort-options="{
-              enabled: true,
-              initialSortBy: {
-                field: 'pay_period',
-                type: 'asc'
-              }
-            }"
-            :search-options="{
-              enabled: true,
-              placeholder: 'Search by employee number',
-              searchFn: searchEmployees,
-            }"
-          />
 
-        </div>
-
+        <!-- data form -->
         <b-form
           v-if="!showTable"
           class="file-input-form"
@@ -53,6 +28,42 @@
             Save
           </b-btn>
         </b-form>
+
+        <!-- data table -->
+        <div
+          v-else-if="showTable && isCompiled"
+          class="p-relative w-100 h-100"
+        >
+          <div class="report-wrapper">
+            <h2 class="pb-3">
+              Payroll Report
+            </h2>
+            <!-- data table -->
+            <vue-good-table
+              :columns="columns"
+              :rows="timeSheets"
+              :sort-options="{
+                enabled: true,
+                initialSortBy: {
+                  field: 'pay_period',
+                  type: 'asc'
+                }
+              }"
+              :search-options="{
+                enabled: true,
+                placeholder: 'Search by employee number',
+                searchFn: searchEmployees,
+              }"
+            />
+
+          </div>
+        </div>
+
+        <div
+          v-else
+          class="loading"
+      ></div>
+
       </transition>
 
     </b-col>
@@ -201,15 +212,20 @@ $margin: 15px;
   box-shadow: 0px 5px 13px 5px $c-grey;
   border-radius: $b-radius;
   background: white;
+  width: 100%;
+  position: relative;
+  min-height: 400px;
 
   // file upload styles
   .file-input-form {
-    width: 100%;
+    width: 80%;
     overflow: hidden;
     padding: $margin;
-    position: relative !important;
-    width: 100%;
-    top: 0;
+    position: absolute !important;
+    display: block;
+    top: 30px;
+    left: 10%;
+    z-index: 0;
     .file-container {
       width: 100%;
       background: $c-grey;
@@ -237,13 +253,18 @@ $margin: 15px;
     }
   }
 }
+
+// report positioning
 .report-wrapper {
   top: 0;
   position: relative !important;
   width: 100%;
+  z-index: 1;
 }
 // table style
 .vgt-wrap {
+  border-radius: $b-radius;
+  overflow: hidden;
   .vgt-global-search, {
     background: $c-grey !important;
     padding: $margin 0;
@@ -261,6 +282,9 @@ $margin: 15px;
   tbody td {
     padding: $margin $margin;
   }
+  tbody tr:nth-child(even) {
+    background: rgba($c-primary, 0.03);
+  }
   *:not(.magnifying-glass) {
     border: none !important;
   }
@@ -272,9 +296,43 @@ $margin: 15px;
   color: $c-error-text !important;
 }
 
+// preloading animation
+.loading, .loading:before, .loading:after {
+  content: " ";
+  background: rgba($c-primary, 0.21);
+  width: 13vw;
+  height: 13vw;
+  margin: 0 auto;
+  top: 10vw;
+  left: 40vw;
+  border-radius: 50%;
+  position: absolute;
+  opacity: 1;
+  transform: scale(1)
+}
+.loading:before, .loading:after {
+  animation: pulse 1s infinite ease;
+  left: 0px;
+  top: 0px;
+  background: $c-primary;
+}
+.loading:after {
+  animation: pulse 1s 0.8s infinite ease;
+}
+@keyframes pulse {
+    0% {
+      opacity: 1;
+      transform: scale(0.32)
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1)
+    }
+}
+
 // transition animation
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .68s;
+  transition: opacity .5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
