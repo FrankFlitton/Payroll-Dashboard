@@ -5,6 +5,8 @@ import App from './App'
 import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 
+// import the styles
+import 'vue-good-table/dist/vue-good-table.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 

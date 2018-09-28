@@ -11,8 +11,8 @@
       <router-view></router-view>
     </b-container>
 
-    <footer>
-      Coded by Frank Flitton
+    <footer class="p-3">
+      Coded by Frank Flitton, 2018
     </footer>
   </div>
 </template>
@@ -35,5 +35,8 @@ body, #app {
 }
 .flex-fill {
    flex:1 1 auto;
+}
+footer {
+  background: rgb(215, 217, 224)
 }
 </style>
