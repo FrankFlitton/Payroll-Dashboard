@@ -1,9 +1,12 @@
 <template>
-  <b-container class="mt-5 mb-5">
-    <b-row>
-      <b-col>
+  <b-row class="mt-5 mb-5 h-100 d-flex">
+    <b-col class="ui-container p-2 p-sm-5">
       <transition name="fade">
-        <div v-if="showTable">
+        <div
+          v-if="showTable && isCompiled"
+        >
+
+          <!-- data table -->
           <vue-good-table
             :columns="columns"
             :rows="timeSheets"
@@ -19,20 +22,33 @@
               placeholder: 'Search this table',
             }"
           />
+
         </div>
-        <b-form v-if="!showTable">
-          <input type="file" @change="updateFile($event)" />
-          <b-btn
-            @click="handleSubmit()"
+
+        <b-form
+          v-if="!showTable"
+          class="file-input-form"
+        >
+          <label
+            class="file-container p-3 p-sm-5"
+            :class="{'error': submitError}"
           >
-            send!
+            <span v-if="!submitError">
+              Please upload your CSV payroll file here.
+            </span>
+            <span v-if="submitError">
+              Your CSV payroll file is invalid. Please verify and try again.
+            </span>
+            <input type="file" @change="updateFile($event)" />
+          </label><br>
+          <b-btn @click="handleSubmit()">
+            Save
           </b-btn>
         </b-form>
       </transition>
 
-      </b-col>
-    </b-row>
-  </b-container>
+    </b-col>
+  </b-row>
 </template>
 
 <script>
@@ -54,19 +70,21 @@ export default {
     }
   },
   methods: {
-    handleSubmit () {
-      this.postFile()
-    },
     updateFile (event) {
       this.form.formData.append('file', event.target.files[0])
+    },
+    handleSubmit () {
+      this.postFile()
     },
     postFile () {
       let vm = this
       HTTP.post('/uploads/', vm.form.formData, vm.form.headers)
         .then(response => {
+          vm.submitError = false
           vm.getTimeSheets()
         })
         .catch(error => {
+          vm.submitError = true
           console.log(error)
         })
     },
@@ -75,7 +93,7 @@ export default {
       HTTP.get('/timesheet/')
         .then(response => {
           vm.timeSheets = vm.setupTimeSheets(response.data)
-          console.log(vm.timeSheets)
+          console.log(`print timesheets`, vm.timeSheets)
         })
         .catch(error => {
           console.log(error)
@@ -90,11 +108,10 @@ export default {
         sheet.pay_amount = sheet.job_group.compensation * sheet.hours_worked
         return sheet
       })
-      let consolodatedTimeSheets = this.consolodateTimeSheets(timeSheets)
-
+      let consolodatedTimeSheets = this.consolidateTimeSheets(timeSheets)
       return consolodatedTimeSheets
     },
-    consolodateTimeSheets (timeSheets) {
+    consolidateTimeSheets (timeSheets) {
       let compiledSheet = []
       // Seperate by payPeriod
       let payPeriods = _.groupBy(timeSheets, 'pay_period')
@@ -120,14 +137,16 @@ export default {
         }
       })
 
+      this.isCompiled = true
+
       return compiledSheet
     }
   },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      res: '',
       timeSheets: [],
+      submitError: false,
+      isCompiled: false,
       columns: [
         {
           label: 'Employee ID',
@@ -156,3 +175,57 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+// Variables
+$c-grey: rgba(230, 234, 236, 0.5);
+$c-primary: rgb(34, 14, 218);
+$c-error-bg: rgba(221, 169, 169, 0.5);
+$c-error-text: rgb(241, 14, 14);
+$b-radius: 5px;
+$margin: 15px;
+
+.ui-container {
+  background: solid 1px $c-grey;
+  box-shadow: 0px 5px 13px 0px $c-grey;
+  border-radius: $b-radius;
+  background: white;
+
+  // file upload styles
+  .file-input-form {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    padding: $margin;
+    .file-container {
+      width: 100%;
+      background: $c-grey;
+      border-radius: $b-radius;
+    }
+    [type=file] {
+      cursor: pointer;
+      display: flex;
+      font-size: 999px;
+      filter: alpha(opacity=0);
+      min-height: 100%;
+      min-width: 100%;
+      opacity: 0;
+      position: absolute;
+      right: 0;
+      text-align: right;
+      top: 0;
+    }
+    .btn {
+      margin-top: 30px;
+      width: 120px;
+      background: $c-primary;
+      position: relative;
+      z-index: 999;
+    }
+  }
+}
+.error {
+  background: $c-error-bg !important;
+  color: $c-error-text !important;
+}
+</style>

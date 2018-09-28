@@ -16,13 +16,16 @@ from .models import Employee, JobGroup, TimeReport, TimeSheet
 
 class TimeSheetViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows Time Sheets to be viewed or edited.
+    API endpoint that displays ALL timesheets.
     """
     queryset = TimeSheet.objects.all().order_by('pay_date')
     serializer_class = TimeSheetSerializer
 
 
 class FileView(APIView):
+    """
+    API endpoint that recieves a CSV file.
+    """
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
@@ -35,6 +38,10 @@ class FileView(APIView):
             reader = csv.DictReader(io.StringIO(csv_file.read().decode('utf-8')))
             rows = list(reader)
             reader_len = len(rows) - 1
+
+            # If CSV is empty, response
+            if reader_len <= 0:
+                return Response(file_serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
             # Create Time Report
             time_report = rows[reader_len].get('hours worked') # 2nd col
@@ -51,7 +58,6 @@ class FileView(APIView):
 
                 # Ignore last row
                 row_counter = row_counter + 1
-
                 if row_counter < reader_len:
 
                     # Set up variables
@@ -92,6 +98,7 @@ class FileView(APIView):
         else:
             return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Formats the payperiod as a string
 def FormatPayPeriod(dt):
     thresh = 15
     day = int(dt.strftime('%d'))
