@@ -38,8 +38,7 @@
           <div class="loading"></div>
         </div>
         <div
-          v-if-else="showTable && isCompiled && isInit"
-          class="p-relative w-100 h-100"
+          v-if="showTable && isCompiled && isInit"
         >
           <reportTable
             v-if="showTable && isCompiled"
@@ -184,7 +183,7 @@ export default {
   background: white;
   width: 100%;
   position: relative;
-  min-height: 400px;
+  min-height: 375px;
 }
 
 // file upload styles
@@ -192,7 +191,7 @@ export default {
   width: 80%;
   overflow: hidden;
   padding: $margin;
-  position: absolute !important;
+  position: relative;
   display: block;
   top: 30px;
   left: 10%;
@@ -227,8 +226,7 @@ export default {
 // report positioning
 .report-wrapper {
   top: 0;
-  position: relative !important;
-  width: 100%;
+  // position: relative !important;
   z-index: 1;
 }
 

@@ -1,22 +1,24 @@
 <template>
-  <div class="report-wrapper">
-    <h2 class="pb-3">
-        Payroll Report
-    </h2>
-    <!-- data table -->
-    <vue-good-table
-      :columns="columns"
-      :rows="rows"
-      :sort-options="{
-        enabled: true
-      }"
-      :search-options="{
-        enabled: true,
-        placeholder: 'Search by employee number',
-        searchFn: searchEmployees,
-      }"
-    />
-  </div>
+  <b-row class="report-wrapper">
+    <b-col>
+      <h2 class="pb-3">
+          Payroll Report
+      </h2>
+      <!-- data table -->
+      <vue-good-table
+        :columns="columns"
+        :rows="rows"
+        :sort-options="{
+          enabled: true
+        }"
+        :search-options="{
+          enabled: true,
+          placeholder: 'Search by employee number',
+          searchFn: searchEmployees,
+        }"
+      />
+    </b-col>
+  </b-row>
 </template>
 
 <script>
@@ -41,7 +43,7 @@ export default {
       return (x < y ? -1 : (x > y ? 1 : 0))
     },
     formatDollar (value) {
-      return '$'+ value.toFixed(2)
+      return '$' + value.toFixed(2)
     }
   },
   data () {
