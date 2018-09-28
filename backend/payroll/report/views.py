@@ -1,31 +1,25 @@
-from django.contrib.auth.models import User, Group
+import io
+import datetime
+import csv
+
+from django.contrib.auth.models import Group
 from payroll.report.models import TimeReport
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
-from payroll.report.serializers import UserSerializer, GroupSerializer, PayrollFileSerializer
-from .models import Employee, JobGroup, TimeReport
 
-import pdb
-import io
+from payroll.report.serializers import TimeSheetSerializer, PayrollFileSerializer
+from .models import Employee, JobGroup, TimeReport, TimeSheet
 
-import csv
 
-class UserViewSet(viewsets.ModelViewSet):
+class TimeSheetViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows Time Sheets to be viewed or edited.
     """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+    queryset = TimeSheet.objects.all().order_by('pay_date')
+    serializer_class = TimeSheetSerializer
 
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
 
 class FileView(APIView):
     parser_classes = (MultiPartParser, FormParser)
@@ -59,12 +53,13 @@ class FileView(APIView):
                 # Ignore last row
                 row_counter = row_counter + 1
 
-                if row_counter > reader_len:
+                if row_counter < reader_len:
 
                     # Set up variables
                     employee_id = row.get('employee id')
                     job_group = row.get('job group')
-                    job_group = JobGroup.objects.get(id=job_group)
+                    hours_worked = row.get('hours worked', None)
+                    pay_date = row.get('date')
 
                     # Update or create
                     if len(employee_id) > 0:
@@ -74,12 +69,23 @@ class FileView(APIView):
                             employee_obj = Employee(id=employee_id, employee_id=employee_id)
                             employee_obj.save()
 
-                    # if len(job_group) > 0:
-                    #     try:
-                    #         obj = JobGroup.objects.get(id=employee_id)
-                    #     except JobGroup.DoesNotExist:
-                    #         obj = JobGroup(id=employee_id, employee_id=employee_id)
-                    #         obj.save()
+                    if len(job_group) > 0:
+                        try:
+                            job_group_obj = JobGroup.objects.get(id=job_group)
+                        except JobGroup.DoesNotExist:
+                            print('Invalid job group: ' + job_group)
+                            raise ValueError('Job group does not exist.')
+
+                    if len(pay_date) > 0:
+                        pay_date_dt = datetime.datetime.strptime(pay_date, '%d/%m/%Y')
+                        time_sheet_obj = TimeSheet(
+                            pay_date=pay_date_dt,
+                            hours_worked=hours_worked,
+                            job_group=job_group_obj,
+                            employee=employee_obj,
+                            report=time_report_obj,
+                        )
+                        time_sheet_obj.save()
 
             return Response(file_serializer.data, status=status.HTTP_201_CREATED)
         else:

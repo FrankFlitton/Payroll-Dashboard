@@ -27,7 +27,6 @@ export default {
   mounted () {
   },
   created () {
-    this.postFile()
   },
   methods: {
     handleSubmit () {
@@ -40,11 +39,21 @@ export default {
     postFile () {
       let vm = this
       HTTP.post('/uploads/', vm.form.formData, vm.form.headers)
-        .then(function (response) {
-          console.log(response)
-          vm.res = response
+        .then(response => {
+          vm.getTimeSheets()
         })
-        .catch(function (error) {
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getTimeSheets () {
+      let vm = this
+      HTTP.get('/timesheet/')
+        .then(response => {
+          vm.timeSheets = response.data
+          console.log(vm.timeSheets)
+        })
+        .catch( error => {
           console.log(error)
         })
     }
@@ -53,6 +62,7 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       res: '',
+      timeSheets: [],
       form: {
         formData: new FormData(),
         headers: {

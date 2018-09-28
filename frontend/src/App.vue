@@ -1,18 +1,19 @@
 <template>
-  <div id="app">
-    <a-layout>
-      <a-layout-sider>Sider</a-layout-sider>
+  <div id="app" class="d-flex flex-column">
+    <b-navbar toggleable="md" type="dark" variant="primary">
+      <b-container>
+        <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+        <b-navbar-brand href="#">PAYROLLTRON</b-navbar-brand>
+      </b-container>
+    </b-navbar>
 
-        <a-layout>
-          <a-layout-header>Header</a-layout-header>
+    <b-container class="flex-fill">
+      <router-view></router-view>
+    </b-container>
 
-          <a-layout-content>
-            <router-view></router-view>
-          </a-layout-content>
-
-          <a-layout-footer>Footer</a-layout-footer>
-        </a-layout>
-    </a-layout>
+    <footer>
+      Coded by Frank Flitton
+    </footer>
   </div>
 </template>
 
@@ -28,5 +29,11 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+body, #app {
+   min-height:100vh;
+}
+.flex-fill {
+   flex:1 1 auto;
 }
 </style>

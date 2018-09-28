@@ -21,8 +21,8 @@ from rest_framework import routers
 from payroll.report import views
 
 router = routers.DefaultRouter()
-router.register(r'^users/$', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+
+router.register(r'timesheet', views.TimeSheetViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
