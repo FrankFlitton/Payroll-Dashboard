@@ -1,37 +1,10 @@
 <template>
   <b-row class="mt-5 mb-5 h-100 d-flex">
-    <b-col class="ui-container w-100 p-2 p-sm-5 p-relative mb-5" cols="12">
-
-        <!-- upload form -->
-        <b-form
-          class="file-input-form"
-        >
-          <h2 class="pb-3">
-            Upload Payroll File
-          </h2>
-
-          <label
-            class="file-container p-3 p-sm-5"
-            :class="{'error': submitError}"
-          >
-            <span v-if="!submitError">
-              Please upload your CSV payroll file here.
-            </span>
-            <span v-if="submitError">
-              Your CSV payroll file is invalid. Please verify and try again.
-            </span>
-            <input type="file" @change="updateFile($event)" />
-          </label><br>
-          <b-btn @click="handleSubmit()">
-            Save
-          </b-btn>
-        </b-form>
-    </b-col>
 
     <transition name="fade">
       <b-col
         v-if="showTable"
-        class="ui-container w-100 p-2 p-sm-5 p-relative"
+        class="ui-container w-100 p-2 p-sm-5 p-relative mb-5"
         cols="12"
       >
 
@@ -54,6 +27,38 @@
 
       </b-col>
     </transition>
+
+    <b-col class="ui-container w-100 p-2 p-sm-3 p-relative mb-5" cols="12">
+
+        <!-- upload form -->
+        <b-form
+          class="file-input-form"
+        >
+          <h2 class="pb-4">
+            Upload Payroll File
+          </h2>
+
+          <label
+            class="file-container p-3"
+            :class="{'error': submitError}"
+          >
+            <span v-if="!submitError">
+              Please upload your CSV payroll file here.
+            </span>
+            <span v-if="submitError">
+              Your CSV payroll file is invalid. Please verify and try again.
+            </span>
+            <input type="file" @change="updateFile($event)" />
+          </label><br>
+          <b-btn
+            @click="handleSubmit()"
+            varient="primary"
+            class="mb-5"
+          >
+            Save
+          </b-btn>
+        </b-form>
+    </b-col>
   </b-row>
 </template>
 
@@ -189,7 +194,6 @@ export default {
   background: white;
   width: 100%;
   position: relative;
-  min-height: 375px;
 }
 
 // file upload styles
@@ -203,9 +207,15 @@ export default {
   left: 10%;
   z-index: 0;
   .file-container {
-    width: 100%;
+    width: 80%;
     background: $c-grey;
     border-radius: $b-radius;
+    overflow: hidden;
+    position: relative;
+    left: 0;
+    &:hover {
+      background: rgba($c-primary, 0.2)
+    }
   }
   [type=file] {
     cursor: pointer;

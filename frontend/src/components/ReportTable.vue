@@ -13,7 +13,7 @@
         }"
         :search-options="{
           enabled: true,
-          placeholder: 'Search by employee number',
+          placeholder: 'Search by Employee ID',
           searchFn: searchEmployees,
         }"
       />
@@ -51,7 +51,9 @@ export default {
       columns: [
         {
           label: 'Employee ID',
-          field: 'employee'
+          field: 'employee',
+          thClass: 'text-center',
+          tdClass: 'text-center'
         },
         {
           label: 'Pay Period',
@@ -110,11 +112,11 @@ export default {
     text-align: right;
     position: relative;
     span {
-      position: absolute;
+      position: relative;
       display: block;
       width: 100%;
       height: 100%;
-      right: $margin;
+      right: 0;
       top: calc(50% - 0.75em);
     }
     &:hover span {
