@@ -1,8 +1,10 @@
 <template>
   <div id="app" class="d-flex flex-column">
-    <b-navbar toggleable="md" type="dark" variant="primary" class="pt-4 pb-4">
+    <b-navbar toggleable="md" type="dark" variant="primary" class="pt-3 pb-3">
       <b-container>
-        <b-navbar-brand href="#">Payroll App</b-navbar-brand>
+        <b-navbar-brand href="#">
+          <img src="https://www.waveapps.com/assets/img/logo-full-black.svg" alt="WAVE">
+        </b-navbar-brand>
       </b-container>
     </b-navbar>
 
@@ -39,7 +41,7 @@ body, #app {
    flex:1 1 auto;
 }
 nav.bg-primary {
-  background: linear-gradient(45deg, $c-primary, darken($c-primary, 13%));
+  background: white !important;
 }
 footer {
   background: rgb(215, 217, 224)
