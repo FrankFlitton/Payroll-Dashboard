@@ -3,6 +3,13 @@
 ## Overview
 The app is made of 3 Docker containers, `frontend`, `backend` and `db`. The is built with by vuejs, the backend by Django Rest Framework, and db is a postgress container.
 
+## Suggested User Path
+To test the app effectivly:
+1. Attempt to upload sample-empty.csv
+2. Attempt to upload sample-data.csv
+
+The frontend is set up to allow only 1 `.csv` file upload at a time without purging the `Time Sheets` in django Admin for the save of the demo.
+
 ## Setup Instructions with Docker
 This has been tested using the latest Docker for OSX.
 

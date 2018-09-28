@@ -22,7 +22,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import 'static/variables.scss';
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -36,8 +38,8 @@ body, #app {
 .flex-fill {
    flex:1 1 auto;
 }
-.bg-primary {
-  background: rgb(34, 14, 218) !important;
+nav.bg-primary {
+  background: linear-gradient(45deg, $c-primary, darken($c-primary, 13%));
 }
 footer {
   background: rgb(215, 217, 224)

@@ -1,11 +1,9 @@
 <template>
   <b-row class="mt-5 mb-5 h-100 d-flex">
-    <b-col class="ui-container p-2 p-sm-5 p-absolute">
-      <transition name="fade">
+    <b-col class="ui-container w-100 p-2 p-sm-5 p-relative mb-5" cols="12">
 
-        <!-- data form -->
+        <!-- upload form -->
         <b-form
-          v-if="!showTable && !isInit"
           class="file-input-form"
         >
           <h2 class="pb-3">
@@ -28,24 +26,26 @@
             Save
           </b-btn>
         </b-form>
+    </b-col>
 
-        <!-- data table -->
-        <div
-          v-else-if="showTable && isCompiled"
-          class="p-relative w-100 h-100"
-        >
-          <reportTable
-            :rows="timeSheets"
-          ></reportTable>
-        </div>
+    <b-col class="ui-container w-100 p-2 p-sm-5 p-relative" cols="12">
 
-        <!-- Loading Icon -->
+      <!-- Loading Icon -->
+      <transition name="fade">
         <div
-          v-else
+          v-if="!isCompiled || (!showTable && !isInit)"
         >
           <div class="loading"></div>
         </div>
-
+        <div
+          v-if-else="showTable && isCompiled && isInit"
+          class="p-relative w-100 h-100"
+        >
+          <reportTable
+            v-if="showTable && isCompiled"
+            :rows="timeSheets"
+          ></reportTable>
+        </div>
       </transition>
 
     </b-col>
@@ -66,7 +66,7 @@ export default {
     this.getTimeSheets()
   },
   created () {
-    this.isInit = true
+
   },
   computed: {
     showTable () {
@@ -96,6 +96,10 @@ export default {
       let vm = this
       HTTP.get('/timesheet/')
         .then(response => {
+          // Used for BE data check, hides form
+          this.isInit = true
+
+          // Set up data for display
           vm.timeSheets = vm.setupTimeSheets(response.data)
           console.log(`print timesheets`, vm.timeSheets)
         })
@@ -105,6 +109,8 @@ export default {
     },
     // Format the object for table viz
     setupTimeSheets (timeSheets) {
+      this.isCompiled = false
+
       // Set up the data to process
       timeSheets.map(sheet => {
         sheet.employee = sheet.employee.id
@@ -141,9 +147,7 @@ export default {
         }
       })
 
-      setTimeout(() => {
-        this.isCompiled = true
-      }, 3000)
+      this.isCompiled = true
 
       return compiledSheet
     },
@@ -157,6 +161,7 @@ export default {
       submitError: false,
       isCompiled: false,
       isInit: true,
+      loadSlow: false, // change to see loading icon
       form: {
         formData: new FormData(),
         headers: {
@@ -234,7 +239,7 @@ export default {
 }
 
 // preloading animation
-.loading, .loading:before, .loading:after {
+.loading, .loading:before {
   content: " ";
   background: rgba($c-primary, 0.34);
   width: 13vw;
@@ -246,7 +251,7 @@ export default {
   position: absolute;
   transform: scale(1);
 }
-.loading:before, .loading:after {
+.loading:before  {
   animation: pulse 1s infinite ease-out;
   left: 0px;
   top: 0px;
