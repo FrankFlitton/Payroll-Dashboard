@@ -43,6 +43,7 @@ class TimeSheetSerializer(serializers.HyperlinkedModelSerializer):
         model = TimeSheet
         fields = (
             'pay_date',
+            'pay_period',
             'hours_worked',
             'job_group',
             'employee',

@@ -1,6 +1,7 @@
 import io
-import datetime
 import csv
+import datetime
+from calendar import monthrange
 
 from django.contrib.auth.models import Group
 from payroll.report.models import TimeReport
@@ -32,8 +33,6 @@ class FileView(APIView):
             csv_file = request.FILES['file']
             csv_file.seek(0)
             reader = csv.DictReader(io.StringIO(csv_file.read().decode('utf-8')))
-
-            print('**********************')
             rows = list(reader)
             reader_len = len(rows) - 1
 
@@ -78,8 +77,10 @@ class FileView(APIView):
 
                     if len(pay_date) > 0:
                         pay_date_dt = datetime.datetime.strptime(pay_date, '%d/%m/%Y')
+                        pay_period = FormatPayPeriod(pay_date_dt)
                         time_sheet_obj = TimeSheet(
                             pay_date=pay_date_dt,
+                            pay_period=pay_period,
                             hours_worked=hours_worked,
                             job_group=job_group_obj,
                             employee=employee_obj,
@@ -91,29 +92,24 @@ class FileView(APIView):
         else:
             return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# class ReporViewSet(viewsets.ModelViewSet):
-#     parser_classes = (MultiPartParser,)
-#     queryset = TimeReport.objects.all()
-#     serializer_class = FileUploadSerializer
+def FormatPayPeriod(dt):
+    thresh = 15
+    day = int(dt.strftime('%d'))
+    month = int(dt.strftime('%m'))
+    year = int(dt.strftime('%Y'))
 
-#     def post(self, request, filename, format=None):
-#         file_obj = request.data['file']
-#         print(request)
-#         print(filename)
-#         # ...
-#         # do some stuff with uploaded file
-#         # ...
-#         return Response(status=204)
+    # Create the bounds for the day
+    if day >= thresh:
+        day_min = 1
+        day_max = thresh
+    else:
+        day_min = thresh + 1
+        day_max = int(monthrange(year, month)[1])
 
-    # def post(self, request, format=None):
+    # Format month
+    if month < 10:
+        month = f'0{month}'
 
-    #     f = open(
-    #         request.FILES["file"],
-    #         'rb'
-    #     )
-    #     reader = csv.reader(f)
-    #     for row in reader:
-    #         print(row)
-    #     f.close()
+    string = f'{day_min}/{month}/{year} - {day_max}/{month}/{year}'
 
-    #     return Response(status=204)
+    return string
