@@ -1,0 +1,18 @@
+[
+  {
+    "model": "report.JobGroup",
+    "pk": 1,
+    "fields": {
+      "id": "A",
+      "compensation": 30.00
+    }
+  },
+  {
+    "model": "report.JobGroup",
+    "pk": 2,
+    "fields": {
+      "id": "B",
+      "compensation": 20.00
+    }
+  }
+]

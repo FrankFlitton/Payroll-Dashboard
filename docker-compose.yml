@@ -19,7 +19,10 @@ services:
       - db
     environment:
       - HOST=0.0.0.0
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      bash -c "python manage.py migrate
+      && python manage.py runserver 0.0.0.0:8000
+      && python manage.py runserver 0.0.0.0:8000"
 
   frontend:
     build:
