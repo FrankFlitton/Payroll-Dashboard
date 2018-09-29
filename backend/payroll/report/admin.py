@@ -16,10 +16,10 @@ class TimeReportAdmin(admin.ModelAdmin):
     search_field = ('id', )
 
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'employee_id', )
-    list_filter = ('id', 'employee_id', )
+    list_display = ('id', )
+    list_filter = ('id', )
     ordering = ('id', )
-    search_field = ('id', 'employee_id', )
+    search_field = ('id', )
 
 class TimeSheetAdmin(admin.ModelAdmin):
     list_display = ('id', 'pay_date', 'hours_worked', 'job_group', 'employee', 'report', )
