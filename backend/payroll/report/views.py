@@ -39,27 +39,32 @@ class FileView(APIView):
             rows = list(reader)
             reader_len = len(rows) - 1
 
-            # If CSV is empty, response
+            # Error if CSV is empty, or create
             if reader_len <= 0:
-                return Response(file_serializer.data, status=status.HTTP_400_BAD_REQUEST)
-
-            # Create Time Report
-            time_report = rows[reader_len].get('hours worked') # 2nd col holds the data
-            if len(time_report) > 0:
+                return Response(
+                    ["No rows of data found in CSV file."],
+                    status=status.HTTP_400_BAD_REQUEST
+                    )
+            else:
+                # Try to create Time Report
+                time_report = rows[reader_len].get('hours worked') # Get Time Report ID
                 try:
                     time_report_obj = TimeReport.objects.get(id=time_report)
-                    return Response(file_serializer.data, status=status.HTTP_400_BAD_REQUEST)
+                    return Response(
+                        ["This report already exists."],
+                        status=status.HTTP_400_BAD_REQUEST,
+                        )
                 except TimeReport.DoesNotExist:
                     time_report_obj = TimeReport(id=time_report)
                     time_report_obj.save()
 
             # Read each row
-            row_counter = 0
+            row_counter = 1
             for row in rows:
 
                 # Ignore last row
                 row_counter = row_counter + 1
-                if row_counter < reader_len + 1:
+                if row_counter < reader_len:
 
                     # Set up variables
                     employee_id = row.get('employee id')
@@ -72,7 +77,7 @@ class FileView(APIView):
                         try:
                             employee_obj = Employee.objects.get(id=employee_id)
                         except Employee.DoesNotExist:
-                            employee_obj = Employee(id=employee_id, employee_id=employee_id)
+                            employee_obj = Employee(id=employee_id)
                             employee_obj.save()
 
                     if len(job_group) > 0:
@@ -95,9 +100,15 @@ class FileView(APIView):
                         )
                         time_sheet_obj.save()
 
-            return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(
+                file_serializer.data,
+                status=status.HTTP_201_CREATED,
+                )
         else:
-            return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                ["Please verify you have a CSV selected and try again."],
+                status=status.HTTP_400_BAD_REQUEST,
+                )
 
 # Formats the payperiod as a string
 def FormatPayPeriod(dt):

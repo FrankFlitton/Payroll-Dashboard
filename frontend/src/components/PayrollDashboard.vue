@@ -40,14 +40,24 @@
 
           <label
             class="file-container p-3"
-            :class="{'error': submitError}"
+            :class="{'error': errorClass }"
           >
-            <span v-if="!submitError">
-              Please upload your CSV payroll file here.
+
+            <!-- CTA -->
+            <span v-if="!submitError && !form.fileSelected">
+              Please upload your CSV payroll file here.<br>
             </span>
-            <span v-if="submitError">
-              Your CSV payroll file is invalid. Please verify and try again.
+
+            <!-- File Status -->
+            <span v-if="submitError.length">
+              {{submitError}} <br>
+              <small>{{form.fileSelected}}</small>
             </span>
+            <span v-else-if="form.fileSelected">
+              {{form.fileSelected}} is selected.<br>
+              <small>{{form.fileSelected}}</small>
+            </span>
+
             <input type="file" @change="updateFile($event)" />
           </label><br>
           <b-btn
@@ -75,30 +85,50 @@ export default {
   mounted () {
     this.getTimeSheets()
   },
-  created () {
-
-  },
   computed: {
-    showTable () {
+    showTable: function () {
       return !!this.timeSheets.length
+    },
+    errorClass: function () {
+      return !!this.submitError.length
     }
   },
   methods: {
     updateFile (event) {
-      this.form.formData.append('file', event.target.files[0])
+      // check for csv file extension
+      const csvCheck = event.target.files[0]
+        ? _.lowerCase(event.target.files[0].name.split('.').reverse()[0])
+        : null
+
+      this.form.fileSelected = ''
+      this.submitError = ''
+
+      if (csvCheck === 'csv') {
+        // prep form data
+        this.form.formData.append('file', event.target.files[0])
+        this.form.fileSelected = event.target.files[0].name
+      } else {
+        // report error
+        this.submitError = 'Please select a CSV file.'
+        this.form.fileSelected = event.target.files[0]
+          ? event.target.files[0].name
+          : 'no file selected'
+      }
     },
     handleSubmit () {
-      this.postFile()
+      if (!this.submitError) {
+        this.postFile()
+      }
     },
     postFile () {
       let vm = this
+      vm.submitError = ''
       HTTP.post('/uploads/', vm.form.formData, vm.form.headers)
         .then(response => {
-          vm.submitError = false
           vm.getTimeSheets()
         })
         .catch(error => {
-          vm.submitError = true
+          vm.submitError = error.response.data[0]
           console.log(error)
         })
     },
@@ -157,6 +187,7 @@ export default {
         }
       })
 
+      // Reveals table
       this.isCompiled = true
 
       return compiledSheet
@@ -168,12 +199,13 @@ export default {
   data () {
     return {
       timeSheets: [],
-      submitError: false,
+      submitError: '',
       isCompiled: false,
       isInit: true,
       loadSlow: false, // change to see loading icon
       form: {
         formData: new FormData(),
+        fileSelected: '',
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -289,7 +321,7 @@ export default {
 
 // transition animation
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity 1s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0 !important;
