@@ -163,6 +163,7 @@ export default {
     },
     consolidateTimeSheets (timeSheets) {
       let compiledSheet = []
+
       // Seperate by payPeriod
       let employeeId = _.groupBy(timeSheets, 'employee')
       employeeId = _.forEach(employeeId, (value, key) => {

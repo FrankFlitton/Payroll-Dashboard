@@ -59,12 +59,12 @@ class FileView(APIView):
                     time_report_obj.save()
 
             # Read each row
-            row_counter = 1
+            row_counter = 0
             for row in rows:
 
                 # Ignore last row
                 row_counter = row_counter + 1
-                if row_counter < reader_len:
+                if row_counter <= reader_len:
 
                     # Set up variables
                     employee_id = row.get('employee id')
