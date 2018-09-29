@@ -35,7 +35,13 @@ class FileView(APIView):
             # obtain CSV file
             csv_file = request.FILES['file']
             csv_file.seek(0)
-            reader = csv.DictReader(io.StringIO(csv_file.read().decode('utf-8')))
+            reader = csv.DictReader(
+                io.StringIO(
+                    csv_file
+                    .read()
+                    .decode('utf-8')
+                    )
+                )
             rows = list(reader)
             reader_len = len(rows) - 1
 
@@ -46,8 +52,10 @@ class FileView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                     )
             else:
+                # Get Time Report ID
+                time_report = rows[reader_len].get('hours worked')
+
                 # Try to create Time Report
-                time_report = rows[reader_len].get('hours worked') # Get Time Report ID
                 try:
                     time_report_obj = TimeReport.objects.get(id=time_report)
                     return Response(
@@ -90,7 +98,9 @@ class FileView(APIView):
                                 )
 
                     if len(pay_date) > 0:
-                        pay_date_dt = datetime.datetime.strptime(pay_date, '%d/%m/%Y')
+                        pay_date_dt = datetime.datetime.strptime(
+                            pay_date, '%d/%m/%Y',
+                        )
                         pay_period = FormatPayPeriod(pay_date_dt)
                         time_sheet_obj = TimeSheet(
                             pay_date=pay_date_dt,
