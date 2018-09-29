@@ -1,19 +1,25 @@
-# App Structure
+# Overview
 
-## Overview
-The app is made of 3 Docker containers, `frontend`, `backend` and `db`. The is built with by vuejs, the backend by Django Rest Framework, and db is a postgress container.
+The app is composed of 3 Docker containers, `frontend`, `backend` and `db`. The frontend is built with by vuejs, the backend by Django Rest Framework, and the db is postgress.
 
-## Suggested User Path
-To test the app effectivly:
-1. Attempt to upload sample-empty.csv
-2. Attempt to upload sample-data.csv
+# Highlights
 
-The frontend is set up to allow only 1 `.csv` file upload at a time without purging the `Time Sheets` in django Admin for the save of the demo.
+I'm proud of the scalablity of the solution and the responsive design. UX was a key consideration of how I approached the problem. The data model can be easily extended to contain relevant paycheque details such as employee names, tax deductions, or csv provider. With some slight adjustments, the app could be deployed to a production server.
 
-## Setup Instructions with Docker
+The highlights of the app include:
+- Responsive frontend, styled with subtle animations
+- Data is clearly presented, invites the user to sort table
+- Network of Docker containers seperated by system
+- Clear error messages incorperated into the interface
+- Data model can be easily extended
+- Admin panel for debugging data and APIs
+- CSV file is never stored, only read (security)
+- Branding colours sampled from Wave's website
+
+# Setup Instructions with Docker
 This has been tested using the latest Docker for OSX.
 
-### Start the images
+## Start the images
 
 $ ```docker-compose up```
 
@@ -26,7 +32,7 @@ If there are no built images, docker will create and run them. The app servers c
     Server:     http://localhost:8000
 ```
 
-### Accessing Django Admin Panel
+## Accessing Django Admin Panel
 
 Run $ ``` docker ps ``` to get a list of live images.
 
