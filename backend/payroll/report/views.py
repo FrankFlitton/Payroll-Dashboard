@@ -84,8 +84,10 @@ class FileView(APIView):
                         try:
                             job_group_obj = JobGroup.objects.get(id=job_group)
                         except JobGroup.DoesNotExist:
-                            print('Invalid job group: ' + job_group)
-                            raise ValueError('Job group does not exist.')
+                            return Response(
+                                ["Job grouop does not exist."],
+                                status=status.HTTP_400_BAD_REQUEST,
+                                )
 
                     if len(pay_date) > 0:
                         pay_date_dt = datetime.datetime.strptime(pay_date, '%d/%m/%Y')
