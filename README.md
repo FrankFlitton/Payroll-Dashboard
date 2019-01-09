@@ -34,36 +34,17 @@ An example input file named `sample.csv` is included in this repo.
 
 ### How the application works
 
-1. Your app must accept (via a form) a comma separated file with the schema
+1. The app accepts (via a form) a CSV file with the schema
    described in the previous section.
-1. Your app must parse the given file, and store the timekeeping information in
+1. The app then parses the given file, and store the timekeeping information in
    a relational database for archival reasons.
-1. After upload, your application should display a _payroll report_. This
-   report should also be accessible to the user without them having to upload a
-   file first.
+1. After upload, the application displays a _payroll report_. The report is
+   accessible to the user without them having to upload a file first.
 1. If an attempt is made to upload two files with the same report id, the
    second upload should fail with an error message indicating that this is not
    allowed.
 
-The payroll report should be structured as follows:
-
-1. There should be 3 columns in the report: `Employee Id`, `Pay Period`,
-   `Amount Paid`
-1. A `Pay Period` is a date interval that is roughly biweekly. Each month has
-   two pay periods; the _first half_ is from the 1st to the 15th inclusive, and
-   the _second half_ is from the 16th to the end of the month, inclusive.
-1. Each employee should have a single row in the report for each pay period
-   that they have recorded hours worked. The `Amount Paid` should be reported
-   as the sum of the hours worked in that pay period multiplied by the hourly
-   rate for their job group.
-1. If an employee was not paid in a specific pay period, there should not be a
-   row for that employee + pay period combination in the report.
-1. The report should be sorted in some sensical order (e.g. sorted by employee
-   id and then pay period start.)
-1. The report should be based on all _of the data_ across _all of the uploaded
-   time reports_, for all time.
-
-As an example, a sample file with the following data:
+The app A sample file with the following data:
 
 <table>
 <tr>
@@ -163,7 +144,7 @@ should produce the following payroll report:
 
 ## Application Overview
 
-The app is composed of 3 Docker containers, `frontend`, `backend` and `db`. The frontend is built with by vuejs, the backend by Django Rest Framework, and the db is postgresql.
+The app is composed of 3 Docker containers, `frontend`, `backend` and `db`. The frontend is built with by VueJs, the backend by Django Rest Framework, and the db is postgresql.
 
 ### Highlights
 
