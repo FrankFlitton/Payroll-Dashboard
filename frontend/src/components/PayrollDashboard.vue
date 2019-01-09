@@ -141,7 +141,6 @@ export default {
 
           // Set up data for display
           vm.timeSheets = vm.setupTimeSheets(response.data)
-          console.log(`print timesheets`, vm.timeSheets)
         })
         .catch(error => {
           console.log(error)
@@ -150,7 +149,6 @@ export default {
     // Format the object for table viz
     setupTimeSheets (timeSheets) {
       this.isCompiled = false
-      console.log(`raw sheet`, timeSheets)
       // Set up the data to process
       let newSheets = timeSheets.map(sheet => {
         sheet.employee = sheet.employee.id
@@ -158,7 +156,6 @@ export default {
         sheet.pay_amount = sheet.job_group.compensation * sheet.hours_worked
         return sheet
       })
-      console.log(`flat sheet`, newSheets)
       let consolodatedTimeSheets = this.consolidateTimeSheets(newSheets)
       return consolodatedTimeSheets
     },
