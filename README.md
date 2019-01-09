@@ -175,7 +175,6 @@ The highlights of the app include:
 - Data model can be easily extended
 - Admin panel for debugging data and APIs
 - CSV file is never stored, only read (security)
-- Branding colours sampled from Wave's website
 
 ## Setup Instructions with Docker
 This has been tested using the latest Docker for OSX.
