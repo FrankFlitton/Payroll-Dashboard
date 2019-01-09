@@ -3,7 +3,7 @@
     <b-navbar toggleable="md" type="dark" variant="primary" class="pt-3 pb-3">
       <b-container>
         <b-navbar-brand href="#">
-          <img src="https://www.waveapps.com/assets/img/logo-full-black.svg" alt="WAVE">
+          <img src="@/assets/payd.svg" alt="PAYD">
         </b-navbar-brand>
       </b-container>
     </b-navbar>
@@ -13,7 +13,7 @@
     </b-container>
 
     <footer class="p-3">
-      Coded by Frank Flitton, 2018
+      Coded by <a href="http://frankflitton.com/">Frank Flitton</a>, 2018
     </footer>
   </div>
 </template>
