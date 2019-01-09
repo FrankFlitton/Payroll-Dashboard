@@ -160,7 +160,7 @@ The highlights of the app include:
 ## Setup Instructions with Docker
 This has been tested using the latest Docker for OSX.
 
-### Start the images
+### Start The Containers
 
 $ ```docker-compose up```
 
