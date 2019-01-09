@@ -150,15 +150,16 @@ export default {
     // Format the object for table viz
     setupTimeSheets (timeSheets) {
       this.isCompiled = false
-
+      console.log(`raw sheet`, timeSheets)
       // Set up the data to process
-      timeSheets.map(sheet => {
+      let newSheets = timeSheets.map(sheet => {
         sheet.employee = sheet.employee.id
         sheet.compensation = sheet.job_group.compensation
         sheet.pay_amount = sheet.job_group.compensation * sheet.hours_worked
         return sheet
       })
-      let consolodatedTimeSheets = this.consolidateTimeSheets(timeSheets)
+      console.log(`flat sheet`, newSheets)
+      let consolodatedTimeSheets = this.consolidateTimeSheets(newSheets)
       return consolodatedTimeSheets
     },
     consolidateTimeSheets (timeSheets) {
