@@ -101,7 +101,8 @@ DATABASES = {
         'USER': getenv('DBUSER'),
         'HOST': getenv('DBHOST'),
         'PORT': getenv('DBPORT'),
-        'PASSWORD': getenv('DBPASSWORD')
+        'PASSWORD': getenv('DBPASSWORD'),
+        'ATOMIC_REQUESTS': True,
     }
 }
 
