@@ -1,4 +1,4 @@
-# Simple Payrole Batch
+# Simple Payroll Batch
 > A Simple VueJS, Django, and Docker solution
 
 ## Project Description
