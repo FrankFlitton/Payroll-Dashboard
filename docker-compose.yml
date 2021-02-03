@@ -3,6 +3,16 @@ version: '3'
 services:
   db:
     image: postgres
+    container_name: db
+    tty: true
+    stdin_open: true
+    ports:
+      - '5432:5432'
+    networks:
+      - djangonetwork
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
 
   backend:
     build:
@@ -13,6 +23,8 @@ services:
     tty: true
     stdin_open: true
     env_file: ./dockerfiles/backend/env
+    links:
+      - db:db
     ports:
       - "8000:8000"
     depends_on:
@@ -23,6 +35,8 @@ services:
       bash -c "python manage.py migrate
       && python /app/manage.py loaddata init
       && python manage.py runserver 0.0.0.0:8000"
+    networks:
+      - djangonetwork
 
   frontend:
     build:
@@ -39,3 +53,7 @@ services:
     environment:
       - HOST=0.0.0.0
     command: npm run dev
+
+networks:
+  djangonetwork:
+      driver: bridge
