@@ -4,5 +4,6 @@ DBNAME=postgres
 DBUSER=postgres
 DBHOST=db
 DBPORT=5432
+DBPASSWORD=postgres
 
 ALLOWED_HOSTS=0.0.0.0,localhost,https://localhost:8080
